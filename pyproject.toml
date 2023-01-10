@@ -1,3 +1,7 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "Census_API_GDF_zoed"
 version = "0.0.1"
@@ -7,6 +11,10 @@ authors = [
 description = "A small example package"
 readme = "README.md"
 requires-python = ">=3.7"
+dynamic = ["dependencies"]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -17,6 +25,3 @@ classifiers = [
 "Homepage" = "https://github.com/zoedesimone/census-api"
 "Bug Tracker" = "https://github.com/zoedesimone/census-api/issues"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
