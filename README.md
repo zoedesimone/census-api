@@ -10,12 +10,12 @@ Defined in _censusgf.py_.
 
 `addCensustoGeojsonFile`: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
-Parameters
-    *`in_pth` : str
+Parameters:
+    * `in_pth` : str
         The file location of the geojson building file.
-    *`out_pth` : str
+    * `out_pth` : str
         The file location in which to save the augmented file.
-    *`key` : str
+    * `key` : str
         The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
 
 
