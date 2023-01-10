@@ -125,7 +125,7 @@ buildings county and state"""
     va_df["OwnedPerc"] = va_df['OwnOcc'] / (va_df['RentOcc']+ va_df['OwnOcc'])
     va_df["RentPerc"] = va_df['RentOcc'] / (va_df['RentOcc']+ va_df['OwnOcc'])
 
-    #Percentage across income groups
+    #Convert count to percentage across income groups
     va_df['total_pop'] = va_df['less10k']+ va_df['10to20k']+ va_df['20to35k']+ va_df['35to50k'] +  va_df['50to75k']+ va_df['75to100k'] + va_df['more100k']
 
     va_df['less10k'] = va_df['less10k']/ va_df['total_pop']
@@ -291,25 +291,6 @@ def get_geoID_2(lat,lng,key):
   return Geoid
 
 
-def Get_Geoids(geojson):
-  """Returns a geojson with an additional GEOID column.
-  VERY BAD TIME COMPLEXITY- API call for each building to get its geoid."""
-  f_remap = remap_coord(f)
-  lat_long = get_lat_long(f_remap)
-
-  geoid = []
-
-  i = 0
-  while i < len(lat_long[0]):
-   la = lat_long[0][i]
-   lg = lat_long[1][i]
-   g = get_geoID_2(la,lg,k)
-   geoid.append(g)
-   i+=1
-  
-  geoid
-
-  f_remap["GEOID"] = geoid
 
 
 
