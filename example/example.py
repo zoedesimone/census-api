@@ -7,5 +7,5 @@ key: str =  ""
 in_f : str = "C:\\temp\\fileName.geojson"
 out_f : str = "C:\\temp\\CensusAugmented.geojson"
 
-import censusgdf as cdf
-cdf.AddCensustoGeojsonFile(in_f,out_f, key)
+import censusapi.censusgdf as cdf
+cdf.addCensustoGeojsonFile(in_f,out_f, key)
