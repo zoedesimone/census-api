@@ -8,13 +8,9 @@ given a geojson file.
 Author: Zoe De Simone, Github: @zoedesimone
 """
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import geopandas as gpd
-from census import Census
-from us import states
 import censusgeocode as cg
-from shapely.geometry import Polygon
 import urllib.request 
 from os.path import exists
 import random
@@ -315,14 +311,5 @@ def Get_Geoids(geojson):
 
   f_remap["GEOID"] = geoid
 
-def Stochastic_Income_Assignment(df):
-  """Returns a geodataframe with a stochastically defined income per household
-  based on census tract level income.
-  """
-  # geodataframe with mean, max and min income in census tract block level
-
-  #geodataframe with GEOID of buildings
-
-  #stochastically assign income from the min,max range to each building in the geodataframe
 
 
