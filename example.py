@@ -4,7 +4,8 @@
 key: str =  ""
 
 #File path of geojson
-f : str = "C:\\temp\\UBEMTemp\\Oshkosh\\oshkoshData.geojson"
+in_f : str = "C:\\temp\\fileName.geojson"
+out_f : str = "C:\\temp\\CensusAugmented.geojson"
 
-import CensusGdfAPI as cd
-cd.AddCensustoGeojsonFile(f, key)
+import censusgdf as cdf
+cdf.AddCensustoGeojsonFile(in_f,out_f, key)
