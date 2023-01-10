@@ -17,4 +17,4 @@ Parameters:
 
 
 ## Example
-Example can be found in [_example.py_](https://github.com/zoedesimone/census-api/blob/main/ExampleCall.py).
+Example can be found in [_example.py_](https://github.com/zoedesimone/census-api/blob/main/example/example.py).
