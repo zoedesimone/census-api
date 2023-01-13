@@ -8,7 +8,7 @@ CensusAPI allows to output an augmented geojson file containing census informati
 
 Defined in _censusgf.py_.
 
-`addCensustoGeojsonFile`: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
+`add_census_to_geojson`: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
 Parameters:
 

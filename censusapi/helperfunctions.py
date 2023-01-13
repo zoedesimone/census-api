@@ -78,7 +78,7 @@ buildings county and state"""
 
     return va_df
 
-def rename_columns(df):
+def rename_default_columns(df):
     """
     Rename default census variables with intelligible names.
     """

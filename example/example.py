@@ -8,4 +8,4 @@ in_f : str = "C:\\temp\\fileName.geojson"
 out_f : str = "C:\\temp\\CensusAugmented.geojson"
 
 import censusapi.censusgdf as cdf
-cdf.addCensustoGeojsonFile(in_f,out_f, key)
+cdf.add_census_to_geojson(in_f,out_f, key)
