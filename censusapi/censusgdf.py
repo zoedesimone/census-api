@@ -17,7 +17,7 @@ import geopandas as gpd
 import os
 
 
-def addCensustoGeojson(in_pth : str, out_pth : str, key : str):
+def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
     """
     Returns a geojson at out_pth with additional columns containing Census 
     Tract Level Data regarding building tract level ownership, population and income.
