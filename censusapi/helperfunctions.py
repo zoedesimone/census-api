@@ -42,40 +42,6 @@ def get_lat_long(geodataframe):
 
     return c_lat,c_long
 
-def get_census_building(la, lo, key):
-    """Get census data for a specific building geometry, given it's latitude and longitude.
-    1 API CALL PER BUILDING"""
-    getgeoinfo = cg.coordinates(x=la, y=lo)
-
-    censusblock = getgeoinfo['2020 Census Blocks']
-    block =censusblock[0] #unwrap the dictionary from the list
-
-    geoID = block['GEOID']
-    stateID = block['STATE']
-    countyID = block['COUNTY']
-    tractID = block['TRACT']
-    blockID = block['BLOCK']
-    objID = block['OBJECTID']
-
-    va_census = key.acs5.state_county_tract(fields = ('NAME','B01003_001E','B25002_002E','B25003_003E','B19013_001E'),
-                                      state_fips = stateID,
-                                      county_fips = countyID,
-                                      tract = tractID,
-                                      year = 2020)
-    va_df = pd.DataFrame(va_census)
-  
-    # Combine state, county, and tract columns together to create a new string and assign to new column
-    va_df["GEOID"] = va_df["state"] + va_df["county"] + va_df["tract"]
-  
-    #get objectID
-    va_df["OBJECTID"] = objID
-
-    #remove useless columns
-    va_df = va_df.drop(columns = ["state", "county", "tract"])
-
-    return va_df
-
-
 
 def get_census_df(la, lo, key):
     """Create a dataframe with censusdata of all the tracts of the county, given a
@@ -107,7 +73,16 @@ buildings county and state"""
     #get objectID
     va_df["OID"] = objID
 
-    va_df.rename(columns = {'B19013_001E':'MedIncome',
+    #remove useless columns
+    va_df = va_df.drop(columns = ["state", "county", "tract"])
+
+    return va_df
+
+def rename_columns(df):
+    """
+    Rename default census variables with intelligible names.
+    """
+    df.rename(columns = {'B19013_001E':'MedIncome',
     'B19013_001M':'IncMarErr',
     'B01003_001E':'TotPop',
     'B25003_003E':'RentOcc',
@@ -122,26 +97,21 @@ buildings county and state"""
     'B25121_092E':'more100k'},
      inplace = True)
 
-    va_df["OwnedPerc"] = va_df['OwnOcc'] / (va_df['RentOcc']+ va_df['OwnOcc'])
-    va_df["RentPerc"] = va_df['RentOcc'] / (va_df['RentOcc']+ va_df['OwnOcc'])
+    df["OwnedPerc"] = df['OwnOcc'] / (df['RentOcc']+ df['OwnOcc'])
+    df["RentPerc"] = df['RentOcc'] / (df['RentOcc']+ df['OwnOcc'])
 
     #Convert count to percentage across income groups
-    va_df['total_pop'] = va_df['less10k']+ va_df['10to20k']+ va_df['20to35k']+ va_df['35to50k'] +  va_df['50to75k']+ va_df['75to100k'] + va_df['more100k']
+    df['total_pop'] = df['less10k']+ df['10to20k']+ df['20to35k']+ df['35to50k'] +  df['50to75k']+ df['75to100k'] + df['more100k']
 
-    va_df['less10k'] = va_df['less10k']/ va_df['total_pop']
-    va_df['10to20k'] = va_df['10to20k'] / va_df['total_pop']
-    va_df['20to35k'] = va_df['20to35k'] / va_df['total_pop']
-    va_df['35to50k']  = va_df['35to50k'] / va_df['total_pop']
-    va_df['50to75k'] = va_df['50to75k'] / va_df['total_pop']
-    va_df['75to100k'] = va_df['75to100k'] / va_df['total_pop']
-    va_df['more100k'] = va_df['more100k'] / va_df['total_pop']
-
-    #va_df["AMI_perc"] = va_df["<80AMI","<150AMI",">150AMI"].T.agg(','.join) #https://stackoverflow.com/questions/27145148/combine-columns-in-a-pandas-dataframe-to-a-column-of-lists-in-a-dataframe
-
-    #remove useless columns
-    va_df = va_df.drop(columns = ["state", "county", "tract"])
-
-    return va_df
+    df['less10k'] = df['less10k']/ df['total_pop']
+    df['10to20k'] = df['10to20k'] / df['total_pop']
+    df['20to35k'] = df['20to35k'] / df['total_pop']
+    df['35to50k']  = df['35to50k'] / df['total_pop']
+    df['50to75k'] = df['50to75k'] / df['total_pop']
+    df['75to100k'] = df['75to100k'] / df['total_pop']
+    df['more100k'] = df['more100k'] / df['total_pop']
+    
+    return df
 
 def make_income(c1,c2,c3,c4,c5,c6,c7):
       #Approximation of AMI bins for Oshkosh
