@@ -12,9 +12,10 @@ Author: Zoe De Simone, Github: @zoedesimone
 
 
 #from IPython.display import display
-import helperfunctions as chf
+import censusapi.helperfunctions as chf
 import geopandas as gpd
 import os
+from census import Census
 
 
 def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
@@ -25,9 +26,9 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
     Parameters
     ----------
     in_pth : str
-        The file location of the geojson building file.
+        The file location of the (.geojson) file.
     out_pth : str
-        The file location in which to save the augmented file.
+        The file location in which to save the ().geojson) augmented file.
     key : str
         The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
 
@@ -52,16 +53,16 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
     'B25121_092E':'more100k'},
     """
 
-    folder = os.path.dirname(in_pth)
+    folder = os.path.dirname(out_pth)
 
     # Read the geojson in_pth and convert coordinate system
-    df = gpd.read_in_pth(in_pth)
+    df = gpd.read_file(in_pth)
     starting_in_pth = chf.remap_coord(in_pth)
 
     # Set API key.
     # A key can be obtained from (http://api.census.gov/data/key_signup.html). 
     #It will provide you with a unique 40 digit text string. Please keep track of this number. Store it in a safe place.
-    k = chf.Census(key)
+    k = Census(key)
 
     #FUNCTION CALLS
 
@@ -88,7 +89,7 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         print(col)
 
 
-    merged_geojson = gpd.GeoDataFrame.to_in_pth(building_census_df, out_pth )
+    merged_geojson = gpd.GeoDataFrame.to_file(building_census_df, out_pth, driver='GeoJSON')
 
     return merged_geojson
 
