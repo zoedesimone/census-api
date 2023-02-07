@@ -55,41 +55,44 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
 
     folder = os.path.dirname(out_pth)
 
-    # Read the geojson in_pth and convert coordinate system
-    df = gpd.read_file(in_pth)
-    starting_in_pth = chf.remap_coord(in_pth)
+    try:
+        with open(in_pth) as f:
+            print(f)
+        f.close
 
-    # Set API key.
-    # A key can be obtained from (http://api.census.gov/data/key_signup.html). 
-    #It will provide you with a unique 40 digit text string. Please keep track of this number. Store it in a safe place.
-    k = Census(key)
+    except FileNotFoundError:
+        print('The input folder path does not exist. Check your filepath.')
 
-    #FUNCTION CALLS
+    else:
+        # Read the geojson in_pth and convert coordinate system
+        #df = gpd.read_file(in_pth)
+        starting_in_pth = chf.remap_coord(in_pth)
 
-    # get the census dataframe for all the tracts in the given county
-    va_census = chf.get_census(in_pth,k)
-    state = chf.get_state(in_pth,k)
+        # Set API key.
+        # A key can be obtained from (http://api.census.gov/data/key_signup.html). 
+        #It will provide you with a unique 40 digit text string. Please keep track of this number. Store it in a safe place.
+        k = Census(key)
 
-    #get the tract shape in_pth
-    tract_pth = folder + "tract.zip"
-    va_tract = chf.get_tract_shp(state,tract_pth)
-    # Reproject tractin_pth to lat/long
-    va_tract = va_tract.to_crs(epsg = 4326)
+        #FUNCTION CALLS
 
-    #Merge tractin_pth and census dataframe 
-    va_census_tract = chf.merge_dataframes(va_census,va_tract)
+        # get the census dataframe for all the tracts in the given county
+        va_census = chf.get_census(in_pth,k)
+        state = chf.get_state(in_pth,k)
 
-    print("Merged in_pth")
-    # Join the building dataframe and the census information
-    building_census_df : gpd.GeoDataFrame = gpd.sjoin(starting_in_pth,va_census_tract, how="inner")
-    #print(building_census_df.head())
+        #get the tract shape in_pth
+        tract_pth = folder + "tract.zip"
+        va_tract = chf.get_tract_shp(state,tract_pth)
+        # Reproject tractin_pth to lat/long
+        va_tract = va_tract.to_crs(epsg = 4326)
 
-    # get Column names
-    for col in building_census_df.columns:
-        print(col)
+        #Merge tractin_pth and census dataframe 
+        va_census_tract = chf.merge_dataframes(va_census,va_tract)
 
+        # Join the building dataframe and the census information
+        building_census_df : gpd.GeoDataFrame = gpd.sjoin(starting_in_pth,va_census_tract, how="inner")
+        #print(building_census_df.head())
 
-    merged_geojson = gpd.GeoDataFrame.to_file(building_census_df, out_pth, driver='GeoJSON')
+        merged_geojson = gpd.GeoDataFrame.to_file(building_census_df, out_pth, driver='GeoJSON')
 
-    return merged_geojson
+        return merged_geojson
 

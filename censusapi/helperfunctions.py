@@ -237,8 +237,6 @@ def merge_dataframes(census,shape):
   """Merge dataframes. Join the attributes of the dataframes together
  Source: https://geopandas.org/docs/user_guide/mergingdata.html"""
   merged = shape.merge(census, on = "GEOID")
-  print(merged.head(2))
-  print('Shape: ', merged.shape)
   return merged
 
 
