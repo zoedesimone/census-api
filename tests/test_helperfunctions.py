@@ -5,16 +5,17 @@ import censusapi.helperfunctions as hf #relative imports
 import pandas as pd
 import geopandas as gpd
 import censusgeocode as cg
+import census
 
 #Test file creation and merging given filepaths
 class HelperFunctionTest(unittest.TestCase):
     """Helper Function Testing"""
 
-    key = os.environ.get('secretUser')
+    key = os.environ.get('secretKey')
     x = -76
     y = 41
 
-
+    #Returns true if state is matching that of lat/long
     def test_census_lat_long(self):
         getgeoinfo = cg.coordinates(-76, 41)
         censusblock = getgeoinfo['2020 Census Blocks']
@@ -24,11 +25,12 @@ class HelperFunctionTest(unittest.TestCase):
         self.assertEqual(stateID, str(42), "The state ID is not (42) Pensilvania. Instead it's:"+str(stateID))
 
         
-    # #Makes a dataframe with US census information
-    # def test_default_columns(self):
-    #     out = hf.get_census_df(42, 83, self.key)
-    #     expected = pd.DataFrame([1,1,1])
-    #     self.assertEqual(out.head(), expected, "Did not pass test_default_columns(")
+    #Makes a dataframe with US census information
+    def test_default_columns(self):
+        k = census.Census(self.key)
+        out = hf.get_census_df(-76, 41, k)
+        self.assertTrue({'B19013_001M'}.issubset(out.columns))
+        self.assertTrue({'GEOID'}.issubset(out.columns))
 
 
 if __name__ == '__main__':
