@@ -25,6 +25,12 @@ def remap_coord(file):
     va_shp = va_shp.to_crs(epsg = 4326) # Converts any coordinate system in the shapefile to a Latitude/Longitude coordinate system: "EPSG:4326" https://geopandas.org/en/v0.8.2/projections.html
     return va_shp
 
+def remap_coord(gdf: gpd.GeoDataFrame):
+    """Remap geodataframe to lat/log coordinate system."""
+    gdf = gdf.to_crs(epsg = 4326) # Converts any coordinate system in the shapefile to a Latitude/Longitude coordinate system: "EPSG:4326" https://geopandas.org/en/v0.8.2/projections.html
+    return gdf
+   
+
 
 def get_lat_long(geodataframe):
     """Get latitude and longitude for all the buildings in a geodataframe"""
