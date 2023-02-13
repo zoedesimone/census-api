@@ -51,19 +51,23 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
     'B25121_092E':'more100k'},
     """
 
-    folder = os.path.dirname(out_pth)
+    #folder = os.path.dirname(out_pth)
 
     try:
-        with open(in_pth) as f:
-            print(f)
-        f.close
+        open(in_pth)
+    except FileNotFoundError as err:
+        print('The input folder path does not exist. Check your input filepath.')
+        raise 
 
-    except FileNotFoundError:
-        print('The input folder path does not exist. Check your filepath.')
-
+    try:
+        folder = os.path.dirname(out_pth)
+    except FileNotFoundError as err:
+        print('The output folder path does not exist. Check your output filepath.')
+        raise 
+        
     else:
         # Convert gojson to universal coordinate system
-        starting_in_pth = chf.remap_coord(in_pth)
+        remapped_df = chf.remap_coord(in_pth)
 
         # Set API key.
         k = Census(key)
@@ -71,8 +75,8 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         #FUNCTION CALLS
 
         # get the census dataframe for all the tracts in the given county
-        va_census = chf.get_census(in_pth,k)
-        state = chf.get_state(in_pth,k)
+        va_census = chf.get_census(remapped_df,k)
+        state = chf.get_state(remapped_df,k)
 
         #get the tract shape in_pth
         tract_pth = folder + "tract.zip"
@@ -84,7 +88,7 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         va_census_tract = chf.merge_dataframes(va_census,va_tract)
 
         # Join the building dataframe and the census information
-        building_census_df : gpd.GeoDataFrame = gpd.sjoin(starting_in_pth,va_census_tract, how="inner")
+        building_census_df : gpd.GeoDataFrame = gpd.sjoin(remapped_df,va_census_tract, how="inner")
         #print(building_census_df.head())
 
         merged_geojson = gpd.GeoDataFrame.to_file(building_census_df, out_pth, driver='GeoJSON')
@@ -92,7 +96,7 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         return merged_geojson
 
 
-def add_census_to_geojson(df: gpd.GeoDataFrame, key : str, *census_variables):
+def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, *census_variables):
     """
     Returns a geojson with additional columns containing Census 
     Tract Level Data regarding building tract level ownership, population and income.
@@ -126,7 +130,7 @@ def add_census_to_geojson(df: gpd.GeoDataFrame, key : str, *census_variables):
     """
 
 
-    df = chf.remap_coord(df) #Convert gojson to universal coordinate system
+    df = chf.remap_coord_df(df) #Convert gojson to universal coordinate system
     k = Census(key)#Set API key.
 
     # get the census dataframe for all the tracts in the given county
