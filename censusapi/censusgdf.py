@@ -96,7 +96,7 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         return merged_geojson
 
 
-def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, *census_variables):
+def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables = None):
     """
     Returns a geojson with additional columns containing Census 
     Tract Level Data regarding building tract level ownership, population and income.
@@ -134,8 +134,11 @@ def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, *census_variables)
     k = Census(key)#Set API key.
 
     # get the census dataframe for all the tracts in the given county
-    va_census = chf.get_census(df,k)
-    state = chf.get_state(df)
+    #va_census = chf.get_census(df,k)
+    lat = chf.get_lat_long(df)[0][0]
+    lng = chf.get_lat_long(df)[1][0]
+    va_census = chf.get_census_df(lat,lng,k,census_variables)
+    state = chf.get_state(df,k)
 
     tract_pth = "C://temp//" + "tract.zip" #create a temporary folder with the tract file
     va_tract = chf.get_tract_shp(state,tract_pth)

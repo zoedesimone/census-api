@@ -49,10 +49,17 @@ def get_lat_long(geodataframe):
     return c_lat,c_long
 
 
-def get_census_df(la, lo, key):
+def get_census_df(la, lo, key, census_variables = None):
     """Create a dataframe with censusdata of all the tracts of the county, given a
 buildings county and state"""
+
+    default_variables = ('NAME','B01003_001E','B25002_002E','B25003_003E','B19013_001E','B19013_001M','B25121_001E','B25121_002E','B25121_017E','B25121_032E','B25121_047E','B25121_062E','B25121_077E','B25121_092E' )
     
+    if census_variables != None:
+       default_variables = census_variables
+    else:
+       default_variables = default_variables
+
     getgeoinfo = cg.coordinates(x=la, y=lo)
 
     censusblock = getgeoinfo['2020 Census Blocks']
@@ -66,7 +73,7 @@ buildings county and state"""
     objID = block['OBJECTID']
 
     #B19013_001E: Median Household income last 12 months
-    va_census = key.acs5.state_county_tract(fields = ('NAME','B01003_001E','B25002_002E','B25003_003E','B19013_001E','B19013_001M','B25121_001E','B25121_002E','B25121_017E','B25121_032E','B25121_047E','B25121_062E','B25121_077E','B25121_092E' ),
+    va_census = key.acs5.state_county_tract(fields = default_variables,
                                         state_fips = stateID,
                                         county_fips = '*',
                                         tract = '*',
@@ -213,6 +220,8 @@ def get_census(df, key):
   df = get_census_df(lat,lng,key)
 
   return df
+
+
 
 def get_state(df, key) -> str:
   """Get the StateID for an entire COUNTY, given the latitude and longitude of 

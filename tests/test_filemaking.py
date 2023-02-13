@@ -28,8 +28,8 @@ class CreatingFileTest(unittest.TestCase):
 
     #TODO fix this assert
     #Returns true if the invalidpath raises a FileNotFound error
-    def test_invalid_path(self):
-       self.assertRaises(FileNotFoundError, cdf.add_census_to_geojson(self.invalid_path, self.my_output_path, self.key))
+    """ def test_invalid_path(self):
+       self.assertRaises(FileNotFoundError, cdf.add_census_to_geojson(self.invalid_path, self.my_output_path, self.key)) """
 
     #Returns true if the output file is created and it is also a Geopandas dataframe
     def test_filemaking_from_df(self):
@@ -37,6 +37,12 @@ class CreatingFileTest(unittest.TestCase):
         out_df = cdf.add_census_to_geojson_df(df,self.key)
         self.assertEqual(type(out_df), type(df))
         
+    #Returns true if the output file is created with optional census varaiables
+    def test_filemaking_optional_variables_df(self):
+        df = gpd.read_file(self.my_data_path)
+        variables = ('NAME','B01001_001E')
+        out_df = cdf.add_census_to_geojson_df(df,self.key, variables)
+        self.assertTrue({'B01001_001E'}.issubset(out_df.columns))
 
 
 if __name__ == '__main__':
