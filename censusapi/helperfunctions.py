@@ -25,7 +25,7 @@ def remap_coord(file):
     va_shp = va_shp.to_crs(epsg = 4326) # Converts any coordinate system in the shapefile to a Latitude/Longitude coordinate system: "EPSG:4326" https://geopandas.org/en/v0.8.2/projections.html
     return va_shp
 
-def remap_coord(gdf: gpd.GeoDataFrame):
+def remap_coord_df(gdf: gpd.GeoDataFrame):
     """Remap geodataframe to lat/log coordinate system."""
     gdf = gdf.to_crs(epsg = 4326) # Converts any coordinate system in the shapefile to a Latitude/Longitude coordinate system: "EPSG:4326" https://geopandas.org/en/v0.8.2/projections.html
     return gdf
@@ -201,12 +201,12 @@ def get_stateID(lat,lng):
     return stateID
 
 
-def get_census(file, key):
+def get_census(df, key):
   """Get census data for an entire COUNTY, given it's latitude and longitude
 1 GENERAL API CALL FOR ALL THE TRACTS"""
 
-  f_remap = remap_coord(file)
-  lat_long = get_lat_long(f_remap)
+  #f_remap = remap_coord(file)
+  lat_long = get_lat_long(df)
   lat = lat_long[0][0]
   lng = lat_long[1][0]
 
@@ -214,12 +214,12 @@ def get_census(file, key):
 
   return df
 
-def get_state(file, key) -> str:
+def get_state(df, key) -> str:
   """Get the StateID for an entire COUNTY, given the latitude and longitude of 
   one building in the file."""
 
-  f_remap = remap_coord(file)
-  lat_long = get_lat_long(f_remap)
+  #f_remap = remap_coord(file)
+  lat_long = get_lat_long(df)
   lat = lat_long[0][0]
   lng = lat_long[1][0]
   
