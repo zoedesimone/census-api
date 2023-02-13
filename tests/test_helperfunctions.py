@@ -32,6 +32,17 @@ class HelperFunctionTest(unittest.TestCase):
         self.assertTrue({'B19013_001M'}.issubset(out.columns))
         self.assertTrue({'GEOID'}.issubset(out.columns))
 
+    
+    # Returns true if the census dataset is created with different census variables
+    """ def test_optional_columns(self):
+        variables = ('NAME','B01001_001E')
+        print(variables)
+        k = census.Census(self.key)
+        out = hf.get_census_df(-76, 41, k, variables)
+        self.assertTrue({'B01001_001E'}.issubset(out.columns)) """
+        
+        
+
 
 if __name__ == '__main__':
     unittest.main()
