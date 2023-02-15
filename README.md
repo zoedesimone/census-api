@@ -8,7 +8,7 @@ CensusAPI allows to output an augmented geojson file containing census informati
 
 Defined in _censusgf.py_.
 
-`add_census_to_geojson`: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
+**`add_census_to_geojson`**: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
 Parameters:
 - `in_pth`: str. The file location of the geojson building file.
@@ -17,7 +17,7 @@ Parameters:
 - `census_variables`: tuple[str]. Default = None. 
     An optional tuple of strings identifying ACS 5 Census variables to augment the dataframe. If custom_variables is not specified the function will return an augmented geojson with default columns.
 
-`add_census_to_geojson_df`:  Returns a geojson with additional columns containing Census Tract Level Data regarding building tract level ownership, population and income.
+**`add_census_to_geojson_df`**:  Returns a geojson with additional columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
 Parameters:
 - `df`: GeoDataFrame. The input geodataframe.
@@ -28,8 +28,9 @@ Parameters:
 
 
 **Default Census Variables:**
- Default variables used to augment the geojson are specified below. 
- They are taken from the [ACS 5, 2020](https://www.census.gov/data/developers/data-sets/acs-5year.html) dataset. Default variables can be found in the [Detailed Tables](https://api.census.gov/data/2020/acs/acs5/variables.json):
+
+Default variables used to augment the geojson are specified below. 
+They are taken from the [ACS 5, 2020](https://www.census.gov/data/developers/data-sets/acs-5year.html) dataset. Default variables can be found in the [Detailed Tables](https://api.census.gov/data/2020/acs/acs5/variables.json):
 
 |Census Variable|Readable Column Name|                                               Variable Description                                                |
 |--------------|------------------|------------------------------------------------------------------------------------------------------------------|
