@@ -4,6 +4,13 @@ Implementation of US Census API calls in form of a python library.
 
 CensusAPI allows to output an augmented geojson file containing census information at the US census tract block level given a geojson file in the US.
 
+## Install
+
+census==0.8.19
+censusgeocode==0.5.2
+geopandas==0.9.0
+pandas==1.5.1
+
 ## Usage
 
 Defined in _censusgf.py_.
