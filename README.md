@@ -7,8 +7,11 @@ CensusAPI allows to output an augmented geojson file containing census informati
 ## Install
 
 census==0.8.19
+
 censusgeocode==0.5.2
+
 geopandas==0.9.0
+
 pandas==1.5.1
 
 ## Usage
