@@ -11,7 +11,6 @@ Defined in _censusgf.py_.
 `add_census_to_geojson`: Returns a geojson with columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
 Parameters:
-
 - `in_pth`: str. The file location of the geojson building file.
 - `out_pth`: str. The file location in which to save the augmented file.
 - `key`: str. The 40 digit text string. Can be obtained from [the US Census site.](http://api.census.gov/data/key_signup.html)
@@ -20,6 +19,7 @@ Parameters:
 
 `add_census_to_geojson_df`:  Returns a geojson with additional columns containing Census Tract Level Data regarding building tract level ownership, population and income.
 
+Parameters:
 - `df`: GeoDataFrame. The input geodataframe.
 - `key`: str. The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
 - `census_variables`: tuple[str]. Default = None. 
@@ -27,7 +27,9 @@ Parameters:
 
 
 
-Defaults Census Variables from [ACS 5, 2020](https://www.census.gov/data/developers/data-sets/acs-5year.html). Default variables taken from [Detailed Tables](https://api.census.gov/data/2020/acs/acs5/variables.json):
+**Default Census Variables:**
+ Default variables used to augment the geojson are specified below. 
+ They are taken from the [ACS 5, 2020](https://www.census.gov/data/developers/data-sets/acs-5year.html) dataset. Default variables can be found in the [Detailed Tables](https://api.census.gov/data/2020/acs/acs5/variables.json):
 
 |Census Variable|Readable Column Name|                                               Variable Description                                                |
 |--------------|------------------|------------------------------------------------------------------------------------------------------------------|
