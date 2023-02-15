@@ -41,7 +41,7 @@ Parameters:
 
 
 
-**Default Census Variables:**
+### Default Census Variables:
 
 Default variables used to augment the geojson are specified below. 
 They are taken from the [ACS 5, 2020](https://www.census.gov/data/developers/data-sets/acs-5year.html) dataset. Default variables can be found in the [Detailed Tables](https://api.census.gov/data/2020/acs/acs5/variables.json):
