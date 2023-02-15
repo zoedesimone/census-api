@@ -16,7 +16,7 @@ import geopandas as gpd
 import os
 from census import Census
 
-def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
+def add_census_to_geojson(in_pth : str, out_pth : str, key : str, census_variables: tuple[str] = None):
     """
     Returns a geojson at out_pth with additional columns containing Census 
     Tract Level Data regarding building tract level ownership, population and income.
@@ -29,6 +29,9 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         The file location in which to save the ().geojson) augmented file.
     key : str
         The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
+    census_variables: tuple[str]
+        A custom tuple of strings identifying ACS 5 Census variables to augment the dataframe. If custom_variables is
+        not specified the function will return an augmented geojson with default columns.
 
     Returns
     -------
@@ -72,10 +75,11 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         # Set API key.
         k = Census(key)
 
-        #FUNCTION CALLS
-
         # get the census dataframe for all the tracts in the given county
-        va_census = chf.get_census(remapped_df,k)
+        lat = chf.get_lat_long(remapped_df)[0][0]
+        lng = chf.get_lat_long(remapped_df)[1][0]
+        va_census = chf.get_census_df(lat,lng,k,census_variables)
+
         state = chf.get_state(remapped_df,k)
 
         #get the tract shape in_pth
@@ -96,7 +100,7 @@ def add_census_to_geojson(in_pth : str, out_pth : str, key : str):
         return merged_geojson
 
 
-def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables = None):
+def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables: tuple[str] = None):
     """
     Returns a geojson with additional columns containing Census 
     Tract Level Data regarding building tract level ownership, population and income.
@@ -107,6 +111,9 @@ def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables =
         A geodataframe.
     key : str
         The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
+    census_variables: tuple[str]
+        A custom tuple of strings identifying ACS 5 Census variables to augment the dataframe. If custom_variables is
+        not specified the function will return an augmented geojson with default columns.
 
     Returns
     -------
@@ -134,7 +141,6 @@ def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables =
     k = Census(key)#Set API key.
 
     # get the census dataframe for all the tracts in the given county
-    #va_census = chf.get_census(df,k)
     lat = chf.get_lat_long(df)[0][0]
     lng = chf.get_lat_long(df)[1][0]
     va_census = chf.get_census_df(lat,lng,k,census_variables)
@@ -149,5 +155,7 @@ def add_census_to_geojson_df(df: gpd.GeoDataFrame, key : str, census_variables =
 
     # Join the building dataframe and the census information
     census_df : gpd.GeoDataFrame = gpd.sjoin(df,va_census_tract, how="inner")
+
+    os.remove(tract_pth)
 
     return census_df
