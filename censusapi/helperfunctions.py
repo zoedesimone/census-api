@@ -221,8 +221,6 @@ def get_census(df, key):
 
   return df
 
-
-
 def get_state(df, key) -> str:
   """Get the StateID for an entire COUNTY, given the latitude and longitude of 
   one building in the file."""
