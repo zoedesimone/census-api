@@ -4,7 +4,12 @@ Implementation of US Census API calls in form of a python library.
 
 CensusAPI allows to output an augmented geojson file containing census information at the US census tract block level given a geojson file in the US.
 
-## Install
+## Requirements
+
+### Key
+Obtain a key from (http://api.census.gov/data/key_signup.html) to acess the Census dataset.
+
+### Install
 See the [requirements.txt](https://github.com/zoedesimone/census-api/blob/main/requirements.txt) for all the packages.
 
 - `census==0.8.19`
