@@ -7,7 +7,8 @@ CensusAPI allows to output an augmented geojson file containing census informati
 ## Requirements
 
 ### Key
-Obtain a key from (http://api.census.gov/data/key_signup.html) to acess the Census dataset.
+Obtain a key from http://api.census.gov/data/key_signup.html to acess the Census dataset
+and place it in a `.env'` file: `secretKey = Yourkey`
 
 ### Install
 See the [requirements.txt](https://github.com/zoedesimone/census-api/blob/main/requirements.txt) for all the packages.
