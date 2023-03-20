@@ -4,13 +4,11 @@ Title: Add Census Data to Geodataframe
 Description: This module allows you to augment an existing geojson
 with census information at the US census tract block level.
 
-Requirement: City's geojson
+Requirement: City's geojson file
 
 Author: Zoe De Simone, Github: @zoedesimone
 """
 
-
-#from IPython.display import display
 import censusapi.helperfunctions as chf
 import geopandas as gpd
 import os

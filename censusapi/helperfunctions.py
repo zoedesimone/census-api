@@ -13,7 +13,6 @@ import geopandas as gpd
 import censusgeocode as cg
 import urllib.request 
 from os.path import exists
-import random
 
 
 def remap_coord(file):
@@ -125,36 +124,6 @@ def rename_default_columns(df):
     df['more100k'] = df['more100k'] / df['total_pop']
     
     return df
-
-def make_income(c1,c2,c3,c4,c5,c6,c7):
-      #Approximation of AMI bins for Oshkosh
-    """va_df["<80AMI"] = va_df['less10k']+ va_df['10to20k']+ va_df['20to35k']+ va_df['35to50k']
-    va_df["<150AMI"] = va_df['50to75k']+ va_df['75to100k']
-    va_df[">150AMI"] = va_df['more100k']
-
-    va_df["total_pop"] = va_df["<80AMI"] + va_df["<150AMI"] + va_df[">150AMI"]
-
-    va_df["<80AMI"] = va_df["<80AMI"]/va_df["total_pop"] 
-    va_df["<150AMI"] = va_df["<150AMI"] / va_df["total_pop"]
-    va_df[">150AMI"] = va_df[">150AMI"] / va_df["total_pop"]"""
-
-    if c1 == 1: #less10k
-      inc = random.randint(5000, 10000)
-    elif c2 == 1: #'10to20k'
-      inc = random.randint(10000, 20000)
-    elif c3 ==1 : #'20to35k'
-      inc = random.randint(20000, 35000)
-    elif c4 == 1: #'35to50k'
-      inc = random.randint(35000, 50000)
-    elif c5 == 1: #'50to75k'
-      inc = random.randint(50000, 75000)
-    elif c6 ==1 : #'75to100k'
-      inc = random.randint(75000, 100000)
-    elif c7== 1: #'more100k'
-      inc = random.randint(100000, 400000)
-
-    return inc
-  
 
 
 def get_census_df_DP(la, lo, key):

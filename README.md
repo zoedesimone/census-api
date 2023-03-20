@@ -35,7 +35,7 @@ Parameters:
 
 Parameters:
 - `df`: GeoDataFrame. The input geodataframe.
-- `key`: str. The 40 digit text string. Can be obtained from (http://api.census.gov/data/key_signup.html)
+- `key`: str. The 40 digit text string. Can be obtained from [the US Census site.](http://api.census.gov/data/key_signup.html)
 - `census_variables`: tuple[str]. Default = None. 
     An optional tuple of strings identifying ACS 5 Census variables to augment the dataframe. If custom_variables is not specified the function will return an augmented geojson with default columns.
 

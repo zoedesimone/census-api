@@ -26,11 +26,6 @@ class CreatingFileTest(unittest.TestCase):
         t = os.path.exists(self.my_output_path)
         self.assertTrue(t)
 
-    #TODO fix this assert
-    #Returns true if the invalidpath raises a FileNotFound error
-    """ def test_invalid_path(self):
-       self.assertRaises(FileNotFoundError, cdf.add_census_to_geojson(self.invalid_path, self.my_output_path, self.key)) """
-
     #Returns true if the output file is created and it is also a Geopandas dataframe
     def test_filemaking_from_df(self):
         df = gpd.read_file(self.my_data_path)

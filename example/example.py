@@ -5,11 +5,12 @@ import geopandas as gpd
 
 
 #Example Filepath
-THIS_DIR = Path(__file__).parent
-in_path = THIS_DIR /"data"/"input"/ 'testdata.geojson'
-my_output_path = THIS_DIR /"data"/"output"/ 'resultdata.geojson'
-key = os.environ.get('secretUser')
+this_dir = os.getcwd()
+in_path = this_dir + "/tests/data/input/testdata.geojson"
+my_output_path = this_dir + "/tests/data/output/resultdata.geojson"
 
+#Add Secret Key from Census API
+key = os.environ.get('secretUser')
 
 #Example 1: Augmenting shapefile given an input and output filepath
 cdf.add_census_to_geojson(in_path,my_output_path, key)
@@ -22,4 +23,3 @@ cdf.add_census_to_geojson_df(df, key)
 df = gpd.read_file(in_path)
 optional_census_variables = ('NAME','B01001_001E')
 cdf.add_census_to_geojson_df(df, key, optional_census_variables)
-

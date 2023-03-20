@@ -1,11 +1,11 @@
 import unittest
 from pathlib import Path
 import os 
-import censusapi.helperfunctions as hf #relative imports
 import pandas as pd
 import geopandas as gpd
 import censusgeocode as cg
 import census
+import censusapi.helperfunctions as hf #relative imports
 
 #Test file creation and merging given filepaths
 class HelperFunctionTest(unittest.TestCase):
