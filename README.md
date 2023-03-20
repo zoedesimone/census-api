@@ -1,4 +1,4 @@
-# geocensusapi
+# GeoCensusApi
 
 Implementation of US Census API calls in form of a python library.
 
