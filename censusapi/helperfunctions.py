@@ -9,10 +9,12 @@ Author: Zoe De Simone, Github: @zoedesimone
 """
 
 import pandas as pd
+import numpy as np
 import geopandas as gpd
 import censusgeocode as cg
 import urllib.request 
 from os.path import exists
+import random
 
 
 def remap_coord(file):
@@ -89,6 +91,107 @@ buildings county and state"""
     va_df = va_df.drop(columns = ["state", "county", "tract"])
 
     return va_df
+
+import pandas as pd
+
+def rename_columns(df, column_mapping):
+    """
+    Rename the columns of the DataFrame based on the provided column mapping.
+
+    Parameters:
+        df (pd.DataFrame): Input DataFrame.
+        column_mapping (dict): Dictionary containing old column names as keys and new column names as values.
+
+    Returns:
+        pd.DataFrame: DataFrame with renamed columns.
+
+    Example usage:
+      Assuming you have a DataFrame called 'data'.
+      We want to rename the columns based on the mapping.
+
+      data = pd.DataFrame({
+          'old_col1': [10, 20, 30],
+          'old_col2': [5, 15, 25],
+          'old_col3': [7, 14, 21]
+      })
+
+      column_mapping = {
+          'old_col1': 'new_col1',
+          'old_col2': 'new_col2',
+          'old_col3': 'new_col3'
+      }
+
+      data_new = rename_columns(data, column_mapping)
+      print(data_new)
+
+    """
+
+    if not isinstance(column_mapping, dict):
+        raise ValueError("Column mapping should be provided as a dictionary.")
+
+    old_column_names = list(column_mapping.keys())
+    new_column_names = list(column_mapping.values())
+
+    if len(old_column_names) != len(new_column_names):
+        raise ValueError("Number of old column names should match the number of new column names.")
+
+    for old_col in old_column_names:
+        if old_col not in df.columns:
+            raise ValueError(f"Column '{old_col}' not found in the DataFrame.")
+
+    df_new = df.rename(columns=column_mapping)
+
+    return df_new
+
+
+def compute_percentage_from_columns(df, columns_to_sum):
+    """
+    Compute the percentage of each column in the DataFrame based on the sum of specified columns.
+
+    Parameters:
+        df (pd.DataFrame): Input DataFrame.
+        columns_to_sum (list): List of column names to be used for computing the sum.
+
+    Returns:
+        pd.DataFrame: DataFrame with additional percentage columns.
+
+    Example usage:
+      Assuming you have a DataFrame called 'data'.
+      We want to compute the percentages based on the sum of columns 'A', 'B', and 'C'.
+
+      data = pd.DataFrame({
+          'A': [10, 20, 30],
+          'B': [5, 15, 25],
+          'C': [7, 14, 21]
+      })
+
+      columns_to_sum = ['A', 'B', 'C']
+
+      data_new = compute_percentage_from_columns(data, columns_to_sum)
+      print(data_new)
+
+    """
+
+    if not isinstance(columns_to_sum, list):
+        raise ValueError("Columns to sum should be provided as a list.")
+
+    for col in columns_to_sum:
+        if col not in df.columns:
+            raise ValueError(f"Column '{col}' not found in the DataFrame.")
+
+    df_new = df.copy()
+
+    # Compute sum of specified columns
+    df_new['total_sum'] = df_new[columns_to_sum].sum(axis=1)
+
+    # Compute percentages based on the sum
+    for col in columns_to_sum:
+        df_new[col + '_perc'] = df_new[col] / df_new['total_sum']
+
+    df_new.drop(columns=['total_sum'], inplace=True)
+
+    return df_new
+
 
 def rename_default_columns(df):
     """
@@ -221,26 +324,116 @@ def merge_dataframes(census,shape):
   merged = shape.merge(census, on = "GEOID")
   return merged
 
+import pandas as pd
+import numpy as np
 
-def get_geoID_2(lat,lng,key):
-  """Get the GEOID, given a latitude and longitude coordinate."""
-  getgeoinfo = cg.coordinates(x=lat, y=lng)
+def stochastic_column(df, percentage_columns, new_column_name):
+    """
+    Create a new column in the DataFrame based on stochastic values from percentage columns.
 
-  censusblock = getgeoinfo['2020 Census Blocks']
-  block =censusblock[0] #unwrap the dictionary from the list
+    Parameters:
+        df (pd.DataFrame): Input DataFrame.
+        percentage_columns (list): List of column names containing percentages.
+        new_column_name (str): Name of the new column to be created.
 
-  geoID = block['GEOID']
-  stateID = block['STATE']
-  countyID = block['COUNTY']
-  tractID = block['TRACT']
-  #blockID = block['BLOCK']
-  #objID = block['OBJECTID']
+    Returns:
+        pd.DataFrame: DataFrame with the new column added.
+    """
 
-  Geoid = str(stateID) + str(countyID) + str(tractID)
+    def generate_stochastic_value(percentage):
+        return np.random.random() <= percentage
 
-  return Geoid
+    if new_column_name in df.columns:
+        raise ValueError("New column name already exists in the DataFrame.")
+
+    if not isinstance(percentage_columns, list):
+        raise ValueError("Percentage columns should be provided as a list.")
+
+    for col in percentage_columns:
+        if col not in df.columns:
+            raise ValueError(f"Column '{col}' not found in the DataFrame.")
+
+    df[new_column_name] = np.nan
+
+    for index, row in df.iterrows():
+        for col in percentage_columns:
+            probability = row[col]
+            if not pd.isna(probability):
+                df.at[index, new_column_name] = 1 if generate_stochastic_value(probability) else np.nan
+
+    return df
+
+def make_income(c1,c2,c3,c4,c5,c6,c7):
+      #Approximation of AMI bins for Oshkosh
+    """va_df["<80AMI"] = va_df['less10k']+ va_df['10to20k']+ va_df['20to35k']+ va_df['35to50k']
+    va_df["<150AMI"] = va_df['50to75k']+ va_df['75to100k']
+    va_df[">150AMI"] = va_df['more100k']
+
+    va_df["total_pop"] = va_df["<80AMI"] + va_df["<150AMI"] + va_df[">150AMI"]
+
+    va_df["<80AMI"] = va_df["<80AMI"]/va_df["total_pop"] 
+    va_df["<150AMI"] = va_df["<150AMI"] / va_df["total_pop"]
+    va_df[">150AMI"] = va_df[">150AMI"] / va_df["total_pop"]"""
+
+    if c1 == 1: #less10k
+      inc = random.randint(5000, 10000)
+    elif c2 == 1: #'10to20k'
+      inc = random.randint(10000, 20000)
+    elif c3 ==1 : #'20to35k'
+      inc = random.randint(20000, 35000)
+    elif c4 == 1: #'35to50k'
+      inc = random.randint(35000, 50000)
+    elif c5 == 1: #'50to75k'
+      inc = random.randint(50000, 75000)
+    elif c6 ==1 : #'75to100k'
+      inc = random.randint(75000, 100000)
+    elif c7== 1: #'more100k'
+      inc = random.randint(100000, 400000)
+
+    return inc
 
 
+def stochastic_ownership_income(df, n_trials: int):
+
+  df = rename_default_columns(df)
+
+  #STEP 1: Assign Ownership/Rentership to buildings
+  print("Stochastic Ownership Assignment")
+  df['Owned'] = np.random.binomial(n_trials,df["OwnedPerc"] ) #probability of ownership
+
+  # STEP 2: Delete Rented Buildings
+
+  #Get the names of the indexes for which the building is Rented (value is 0)
+  index_names = df[ (df['Owned'] == 0)].index
+  df.drop(index_names, inplace = True) # drop Rented row indexes from dataFrame
+
+  #STOCHASTIC INCOME ASSINGMENT - 7 INCOMES
+  print("Stochastic Income Assignment")
+  myArray = []
+  for ind in df.index:
+      tup = np.random.multinomial(n_trials, [df['less10k'][ind], df['10to20k'][ind], df['20to35k'][ind],df['35to50k'][ind],df['50to75k'][ind],df['75to100k'][ind],df['more100k'][ind]] )
+      lst = list(tup) #convert tuple to list - ex. output [5, 8, 15, 12, 27, 13, 20]
+
+      #the item of the list with the highest number of hits from the stochastic assignment is changed for a 1 and the rest get a 0.
+      m = max(lst)
+      index = lst.index(m)
+      emptylst = [0,0,0,0,0,0,0]
+      #change highest position with 1
+      emptylst[index] = 1
+
+      myArray.append(emptylst)
+
+  df1 = pd.DataFrame(myArray, columns = ['Sto_10-','Sto_10-20','Sto_20-35','Sto_35-50','Sto_50-75','Sto_75-100','Sto_100+']) # new dataframe with stochastic income
+
+  for col in df1.columns:
+      print(col)
+
+
+  df1['Sto_Income'] = df1.apply(lambda row : make_income(row['Sto_10-'], row['Sto_10-20'], row['Sto_20-35'],row['Sto_35-50'],row['Sto_50-75'],row['Sto_75-100'],row['Sto_100+']), axis = 1 )
+
+  result = pd.concat([df,df1], axis = 1, join= 'inner') #join new dataframe with original one
+
+  return result
 
 
 

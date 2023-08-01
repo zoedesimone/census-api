@@ -9,7 +9,7 @@ Requirement: City's geojson file
 Author: Zoe De Simone, Github: @zoedesimone
 """
 
-import censusapi.helperfunctions as chf
+import helperfunctions as chf
 import geopandas as gpd
 import os
 from census import Census
